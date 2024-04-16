@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupWindow
@@ -34,6 +36,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private lateinit var fragmentList: MutableList<Fragment>
     var oldFragmentIndex: Int = 0
     private var pw: PopupWindow? = null
+
 
     var isNight = false
     var f1: Fragment? = null
@@ -61,8 +64,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun init() {
+        var framelayout: FrameLayout = findViewById(R.id.framwlayout)
+        var alreadyLogin: LinearLayout = findViewById(R.id.already_login)
+        var noneLogin: LinearLayout = findViewById(R.id.none_login)
 
         mBind.imgDraw.setOnClickListener {
+            if (KVUtil.getString(Constants.USER_NAME) != null) {
+                framelayout.removeAllViews()
+                framelayout.addView(alreadyLogin)
+            } else {
+                framelayout.removeAllViews()
+                framelayout.addView(noneLogin)
+            }
             mBind.dl.open()
         }
 
@@ -107,6 +120,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         switchFragment(0)
         mBind.fName = resources.getString(R.string.tab_home)
+
+        val tv_dark1: TextView = findViewById(R.id.tv_dark1)
+        tv_dark1.setOnClickListener {
+            switchDarkMode()
+        }
+
+        val tv_dark2: TextView = findViewById(R.id.tv_dark2)
+        tv_dark2.setOnClickListener {
+            switchDarkMode()
+        }
     }
 
     private fun initFragment() {
@@ -123,6 +146,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             f4 = MyCollectFragment()
         }
     }
+
 
     private fun showPop() {
         if (pw == null) {

@@ -222,10 +222,12 @@
             android:layout_height="match_parent"
             >
             <FrameLayout
+                android:id="@+id/framwlayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
+                <include layout="@layout/already_login"/>
+                <include layout="@layout/none_login"/>
             </FrameLayout>
 
 
