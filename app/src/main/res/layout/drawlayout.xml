@@ -1,0 +1,237 @@
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_color"
+    >
+
+<!--    android:background="@drawable/shape_login_bg"-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/rl1"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/rimg"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/icon_avatar" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
+
+            <TextView
+                android:id="@+id/tx_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="未登录"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="6dp"-->
+<!--                android:text="WanAndroid - V1.0"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textStyle="bold" />-->
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rl2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/favourite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="favourite:"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="0"
+                android:textColor="@color/white"
+                app:layout_constraintLeft_toRightOf="@id/favourite"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/github"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Github:"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/favourite" />
+
+            <TextView
+                android:id="@+id/githubLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text=""
+                android:textColor="@color/white"
+                app:layout_constraintLeft_toRightOf="@id/github"
+                app:layout_constraintTop_toBottomOf="@id/favourite" />
+
+            <TextView
+                android:id="@+id/blog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Blog:"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/github" />
+
+            <TextView
+                android:id="@+id/blogLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text=""
+                android:textColor="@color/white"
+                app:layout_constraintLeft_toRightOf="@id/blog"
+                app:layout_constraintTop_toBottomOf="@id/github" />
+
+            <TextView
+                android:id="@+id/WeChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="WeChat:"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/blog" />
+
+            <TextView
+                android:id="@+id/WeChatNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text=""
+                android:textColor="@color/white"
+                app:layout_constraintLeft_toRightOf="@id/WeChat"
+                app:layout_constraintTop_toBottomOf="@id/blog" />
+
+<!--            <View-->
+<!--                android:id="@+id/d"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:background="@color/white"-->
+<!--                app:layout_constraintLeft_toLeftOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/api" />-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/d">-->
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="Implementation:"-->
+<!--                    android:textStyle="bold" />-->
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="okhttp3+retrofit2" />-->
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="androidx.navigation" />-->
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="kotlinx-coroutines" />-->
+
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="bannerviewpager" />-->
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="roundedimageview" />-->
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="ARouter" />-->
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="Koin" />-->
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="coil" />-->
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="flexbox" />-->
+
+<!--                <TextView-->
+<!--                    style="@style/tx_me"-->
+<!--                    android:text="MMKV" />-->
+
+<!--            </LinearLayout>-->
+
+            <View
+                android:id="@+id/d"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/WeChat"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+            </FrameLayout>
+
+
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,51 @@
+if (singleModule.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+
+apply from: '../dependencies.gradle'
+
+android {
+
+    packagingOptions {
+        jniLibs {
+            excludes += ['lib/arm64-v8a/libhookmalloc.so', 'lib/arm64-v8a/libtestmalloc.so']
+            pickFirsts += ['**/libbytehook.so']
+        }
+    }
+    sourceSets {
+        main {
+            if (singleModule.toBoolean()) {
+                //如果是application，则编译主目录下AndroidManifest.xml
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            } else {
+                //如果是library，则编译manifest下AndroidManifest.xml
+                manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
+            }
+        }
+    }
+
+    defaultConfig {
+        externalNativeBuild {
+            cmake {
+                cppFlags ''
+                abiFilters 'arm64-v8a'
+                //armeabi-v7a
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
+        }
+    }
+    namespace 'com.stew.kb_exp'
+
+}
+
+dependencies {
+    implementation project(path: ':kb_common')
+}

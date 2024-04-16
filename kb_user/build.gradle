@@ -1,0 +1,37 @@
+if (singleModule.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+
+apply from: '../dependencies.gradle'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+android {
+
+    packagingOptions {
+        jniLibs {
+            pickFirsts += ['**/libbytehook.so']
+        }
+    }
+    sourceSets {
+        main {
+            if (singleModule.toBoolean()) {
+                //如果是application，则编译主目录下AndroidManifest.xml
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            } else {
+                //如果是library，则编译manifest下AndroidManifest.xml
+                manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
+            }
+        }
+    }
+    namespace 'com.stew.kb_user'
+}
+
+dependencies {
+    implementation project(path: ':kb_common')
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.activity:activity:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+}

@@ -1,0 +1,11 @@
+include ':kb_user'
+include ':kb_me'
+include ':kb_navigation'
+include ':kb_project'
+include ':kb_home'
+include ':kb_common'
+include ':app'
+rootProject.name = "KotlinBox"
+include ':kb_web'
+include ':app_plugin'
+include ':kb_exp'

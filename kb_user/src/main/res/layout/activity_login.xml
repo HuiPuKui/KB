@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl"
+            style="@style/style_common_top_layout">
+
+            <ImageView
+                android:id="@+id/img_back"
+                style="@style/style_common_top_layout_icon"
+                android:src="@drawable/icon_back" />
+
+            <TextView
+                style="@style/style_common_top_layout_title"
+                android:layout_toEndOf="@id/img_back"
+                android:text="登录" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_login_bg"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="GuoApp"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit1"
+                style="@style/edit_login"
+                android:background="@drawable/shape_10dp_white2"
+                android:gravity="center"
+                android:hint="请输入账号" />
+
+            <EditText
+                android:id="@+id/edit2"
+                style="@style/edit_login"
+                android:background="@drawable/shape_10dp_white2"
+                android:gravity="center"
+                android:inputType="textPassword"
+                android:hint="请输入密码" />
+
+            <LinearLayout
+                android:layout_width="411dp"
+                android:layout_height="105dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tx_register"
+                    style="@style/edit_login"
+                    android:layout_width="124dp"
+                    android:background="@drawable/shape_10dp_blue"
+                    android:gravity="center"
+                    android:text="点击注册"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tx_login"
+                    style="@style/edit_login"
+                    android:background="@drawable/shape_10dp_blue"
+                    android:gravity="center"
+                    android:text="点击登录"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

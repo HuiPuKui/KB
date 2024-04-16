@@ -1,0 +1,33 @@
+if (singleModule.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+    apply plugin: 'org.jetbrains.kotlin.android'
+}
+
+apply from: '../dependencies.gradle'
+
+android {
+
+    packagingOptions {
+        jniLibs {
+            pickFirsts += ['**/libbytehook.so']
+        }
+    }
+    sourceSets {
+        main {
+            if (singleModule.toBoolean()) {
+                //如果是application，则编译主目录下AndroidManifest.xml
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            } else {
+                //如果是library，则编译manifest下AndroidManifest.xml
+                manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
+            }
+        }
+    }
+    namespace 'com.stew.kb_web'
+}
+
+dependencies {
+    implementation project(path: ':kb_common')
+}
