@@ -12,35 +12,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
     >
 
     <TextView
         android:id="@+id/tv_dark1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         android:text="切换亮/暗模式"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:paddingBottom="20dp"/>
+        android:padding="10dp"/>
 
     <TextView
         android:id="@+id/tv_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         android:text="退出登录"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:paddingBottom="20dp"/>
+        android:padding="10dp"/>
 
     <TextView
         android:id="@+id/tv_edit1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         android:text="编辑"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:paddingBottom="20dp"/>
+        android:padding="10dp"/>
 
 </LinearLayout>

@@ -28,6 +28,8 @@ import com.stew.kb_home.ui.HomeFragment
 import com.stew.kb_me.ui.MyCollectFragment
 import com.stew.kb_navigation.ui.MainFragment
 import com.stew.kb_project.ui.ProjectFragment
+import com.stew.kb_user.ui.LoginActivity
+import com.stew.kb_user.ui.RegisterActivity
 import com.stew.kotlinbox.databinding.ActivityMainBinding
 
 
@@ -105,9 +107,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 }
 
                 R.id.f4 -> {
-                    switchFragment(3)
-                    mBind.fName = resources.getString(R.string.tab_collect)
-                    return@setOnItemSelectedListener true
+                    if (KVUtil.getString(Constants.USER_NAME).isNullOrEmpty()) {
+                        val intent = Intent(/* packageContext = */ this, /* cls = */ LoginActivity::class.java)
+                        this.startActivity(intent)
+                    } else {
+                        switchFragment(3)
+                        mBind.fName = resources.getString(R.string.tab_collect)
+                        return@setOnItemSelectedListener true
+                    }
                 }
             }
             false
@@ -129,6 +136,22 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         val tv_dark2: TextView = findViewById(R.id.tv_dark2)
         tv_dark2.setOnClickListener {
             switchDarkMode()
+        }
+
+        val tv_login2: TextView = findViewById(R.id.tv_login2)
+        tv_login2.setOnClickListener {
+            val intent = Intent(/* packageContext = */ this, /* cls = */ LoginActivity::class.java)
+            this.startActivity(intent)
+        }
+
+        val tv_logout:TextView = findViewById(R.id.tv_logout)
+        tv_logout.setOnClickListener {
+
+        }
+
+        val tv_edit:TextView = findViewById(R.id.tv_edit1)
+        tv_edit.setOnClickListener {
+
         }
     }
 
