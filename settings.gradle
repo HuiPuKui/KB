@@ -9,3 +9,4 @@ rootProject.name = "KotlinBox"
 include ':kb_web'
 include ':app_plugin'
 include ':kb_exp'
+include ':kb_sqlite'

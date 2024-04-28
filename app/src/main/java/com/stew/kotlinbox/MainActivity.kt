@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
@@ -141,6 +142,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         val tv_login2: TextView = findViewById(R.id.tv_login2)
         tv_login2.setOnClickListener {
             val intent = Intent(/* packageContext = */ this, /* cls = */ LoginActivity::class.java)
+            this.startActivity(intent)
+        }
+
+        val img_search: ImageView = findViewById(R.id.img_search)
+        img_search.setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
             this.startActivity(intent)
         }
 

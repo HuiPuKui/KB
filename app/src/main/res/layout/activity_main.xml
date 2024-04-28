@@ -36,11 +36,19 @@
                     android:layout_toEndOf="@id/img_draw"
                     android:text="@{f_name}" />
 
+
+
                 <ImageView
                     android:id="@+id/img_box"
                     style="@style/style_common_top_layout_icon"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/icon_box" />
+
+                <ImageView
+                    android:id="@+id/img_search"
+                    style="@style/style_common_top_layout_icon"
+                    app:srcCompat="@drawable/icon_search"
+                    android:layout_toStartOf="@id/img_box"/>
 
             </RelativeLayout>
 
