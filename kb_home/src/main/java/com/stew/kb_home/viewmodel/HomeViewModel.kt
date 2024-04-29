@@ -1,15 +1,15 @@
 package com.stew.kb_home.viewmodel
 
+import ArticleDetailBean
+import DBHelper
 import android.util.Log
 import com.stew.kb_common.base.BaseViewModel
 import com.stew.kb_common.network.BaseResp
 import com.stew.kb_common.network.RespStateData
+import com.stew.kb_common.util.AppCommonUitl
 import com.stew.kb_home.bean.Article
 import com.stew.kb_home.bean.Banner
 import com.stew.kb_home.repo.HomeRepo
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.zip
 
 /**
@@ -47,15 +47,39 @@ class HomeViewModel(private val repo: HomeRepo) : BaseViewModel() {
 //            bannerList.value = it
 //            Log.d("HomeViewModel", "getBannerByFlow success")
 //        }
+        val dbHelper = DBHelper.getInstance(AppCommonUitl.appContext)
 
         repo.getBannerByFlow().zip(repo.getArticleByFlow(0)) { Bbanner, Barticle ->
             Bbanner.responseState = BaseResp.ResponseState.REQUEST_SUCCESS
             bannerList.value = Bbanner
             Barticle.responseState = BaseResp.ResponseState.REQUEST_SUCCESS
             article.value = Barticle
-        }.collect{
-            Log.d("FlowTest", "Time: "+(System.currentTimeMillis()-startTime))
+
+            if (Barticle.data != null) {
+                val articleData = Barticle.data as Article
+                val articleDetailListData = articleData.datas
+                articleDetailListData.forEach {
+                    dbHelper.insertArticle(
+                        ArticleDetailBean(
+                            author = it.author,
+                            fresh = it.fresh,
+                            articleId = it.id,
+                            link = it.link,
+                            niceDate = it.niceDate,
+                            shareUser = it.shareUser,
+                            title = it.title,
+                            superChapterId = it.superChapterId,
+                            superChapterName = it.superChapterName,
+                            collect = it.collect
+                        )
+                    )
+                }
+
+            }
+        }.collect {
+            Log.d("FlowTest", "Time: " + (System.currentTimeMillis() - startTime))
         }
+        Log.w("getAllData", "getDataByFlow: ${dbHelper.getAllArticles()}")
 
     }
 }

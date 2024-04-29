@@ -15,9 +15,14 @@ import androidx.appcompat.app.AppCompatDelegate
 object AppCommonUitl {
 
     var context: Application? = null
+    lateinit var appContext: Context
 
     fun init(app: Application) {
         context = app
+    }
+
+    fun initAppContext(context: Context){
+        appContext = context
     }
 
     //kill process (Application)

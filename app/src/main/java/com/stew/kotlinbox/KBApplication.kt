@@ -46,6 +46,7 @@ class KBApplication : Application() {
         initMMKV()
         AppLogUtil.init(this)
         AppCommonUitl.init(this)
+        AppCommonUitl.initAppContext(applicationContext)
         initUserDarkMode()
         registerActivityLifecycle()
     }
