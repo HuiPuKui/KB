@@ -30,6 +30,7 @@ android {
 
 dependencies {
     implementation project(path: ':kb_common')
+    implementation project(path: ':kb_sqlite')
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.activity:activity:1.8.0'
