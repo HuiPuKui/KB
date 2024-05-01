@@ -17,7 +17,8 @@ data class ArticleDetailBean(
     var collect: Boolean
 )
 
-class DBHelper private constructor(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class DBHelper private constructor(context: Context) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "mydatabase.db"
@@ -84,7 +85,7 @@ class DBHelper private constructor(context: Context) : SQLiteOpenHelper(context,
             put(COLUMN_SUPER_CHAPTER_NAME, article.superChapterName)
             put(COLUMN_COLLECT, if (article.collect) 1 else 0)
         }
-        db.insert(TABLE_NAME, null, values)
+        db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE)
 //        db.close()
     }
 
