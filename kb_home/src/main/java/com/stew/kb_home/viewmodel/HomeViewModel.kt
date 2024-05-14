@@ -47,7 +47,7 @@ class HomeViewModel(private val repo: HomeRepo) : BaseViewModel() {
 //            bannerList.value = it
 //            Log.d("HomeViewModel", "getBannerByFlow success")
 //        }
-        val dbHelper = DBHelper.getInstance(AppCommonUitl.appContext)
+
 
         repo.getBannerByFlow().zip(repo.getArticleByFlow(0)) { Bbanner, Barticle ->
             Bbanner.responseState = BaseResp.ResponseState.REQUEST_SUCCESS
@@ -55,31 +55,9 @@ class HomeViewModel(private val repo: HomeRepo) : BaseViewModel() {
             Barticle.responseState = BaseResp.ResponseState.REQUEST_SUCCESS
             article.value = Barticle
 
-            if (Barticle.data != null) {
-                val articleData = Barticle.data as Article
-                val articleDetailListData = articleData.datas
-                articleDetailListData.forEach {
-                    dbHelper.insertArticle(
-                        ArticleDetailBean(
-                            author = it.author,
-                            fresh = it.fresh,
-                            articleId = it.id,
-                            link = it.link,
-                            niceDate = it.niceDate,
-                            shareUser = it.shareUser,
-                            title = it.title,
-                            superChapterId = it.superChapterId,
-                            superChapterName = it.superChapterName,
-                            collect = it.collect
-                        )
-                    )
-                }
-
-            }
         }.collect {
             Log.d("FlowTest", "Time: " + (System.currentTimeMillis() - startTime))
         }
-        Log.w("getAllData", "getDataByFlow: ${dbHelper.getAllArticles()}")
 
     }
 }

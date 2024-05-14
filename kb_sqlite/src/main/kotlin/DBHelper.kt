@@ -20,6 +20,9 @@ data class ArticleDetailBean(
 class DBHelper private constructor(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
+    //文章idset
+//    private val artIdSet = mutableSetOf<Int>()
+
     companion object {
         private const val DATABASE_NAME = "mydatabase.db"
         private const val DATABASE_VERSION = 1
@@ -53,7 +56,7 @@ class DBHelper private constructor(context: Context) :
                 "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_AUTHOR TEXT," +
                 "$COLUMN_FRESH INTEGER," +
-                "$COLUMN_ARTICLE_ID INTEGER," +
+                "$COLUMN_ARTICLE_ID INTEGER UNIQUE," +
                 "$COLUMN_LINK TEXT," +
                 "$COLUMN_NICE_DATE TEXT," +
                 "$COLUMN_SHARE_USER TEXT," +
@@ -66,12 +69,33 @@ class DBHelper private constructor(context: Context) :
         db.execSQL(createTableQuery)
     }
 
+    private fun isArticleExist(articleId: Int): Boolean {
+        val db = readableDatabase
+        val cursor: Cursor = db.query(
+            TABLE_NAME,
+            arrayOf(COLUMN_ID),
+            "$COLUMN_ARTICLE_ID = ?",
+            arrayOf(articleId.toString()),
+            null,
+            null,
+            null
+        )
+        val exists = cursor.moveToFirst()
+        cursor.close()
+        return exists
+    }
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
 
     fun insertArticle(article: ArticleDetailBean) {
+        // 先检查数据库中是否已经存在相同title的记录
+        if (isArticleExist(article.articleId)) {
+            return
+        }
+
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_AUTHOR, article.author)
@@ -85,8 +109,7 @@ class DBHelper private constructor(context: Context) :
             put(COLUMN_SUPER_CHAPTER_NAME, article.superChapterName)
             put(COLUMN_COLLECT, if (article.collect) 1 else 0)
         }
-        db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE)
-//        db.close()
+        db.insert(TABLE_NAME, null, values)
     }
 
     fun getAllArticles(): List<ArticleDetailBean> {
@@ -134,6 +157,11 @@ class DBHelper private constructor(context: Context) :
         cursor.close()
 //        db.close()
         return articlesList
+    }
+
+    // DBHelper类中新增的方法
+    fun searchArticlesByTitle(searchTitle: String): List<ArticleDetailBean> {
+        return getAllArticles().filter { it.title.contains(searchTitle) }
     }
 
 }

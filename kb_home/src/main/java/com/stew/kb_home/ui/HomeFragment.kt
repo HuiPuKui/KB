@@ -1,11 +1,13 @@
 package com.stew.kb_home.ui
 
+import ArticleDetailBean
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.stew.kb_common.base.BaseVMFragment
 import com.stew.kb_common.network.BaseStateObserver
+import com.stew.kb_common.util.AppCommonUitl
 import com.stew.kb_common.util.Constants
 import com.stew.kb_common.util.ToastUtil
 import com.stew.kb_home.R
@@ -30,6 +32,7 @@ class HomeFragment : BaseVMFragment<FragmentHomeBinding>() {
     var isLoadMore = false
     var list: MutableList<Article.ArticleDetail> = arrayListOf()
     var collectPosition: Int = 0
+    val dbHelper = DBHelper.getInstance(AppCommonUitl.appContext)
 
     override fun getLayoutID(): Int {
         return R.layout.fragment_home
@@ -70,6 +73,23 @@ class HomeFragment : BaseVMFragment<FragmentHomeBinding>() {
 
                 //list添加数据
                 list.addAll(it.datas)
+
+                it.datas.forEach {
+                    dbHelper.insertArticle(
+                        ArticleDetailBean(
+                            author = it.author,
+                            fresh = it.fresh,
+                            articleId = it.id,
+                            link = it.link,
+                            niceDate = it.niceDate,
+                            shareUser = it.shareUser,
+                            title = it.title,
+                            superChapterId = it.superChapterId,
+                            superChapterName = it.superChapterName,
+                            collect = it.collect
+                        )
+                    )
+                }
 
                 Log.d("huipukui", "datas size " + it.datas.size)
 
