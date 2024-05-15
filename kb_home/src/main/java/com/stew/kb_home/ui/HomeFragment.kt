@@ -92,7 +92,7 @@ class HomeFragment : BaseVMFragment<FragmentHomeBinding>() {
                 }
 
                 Log.d("huipukui", "datas size " + it.datas.size)
-
+                
                 //处理数据
                 if (currentPage == 0) {
                     homeRVAdapter.setData(null)

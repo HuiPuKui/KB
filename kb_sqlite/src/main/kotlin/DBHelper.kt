@@ -3,6 +3,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 data class ArticleDetailBean(
     val author: String,
@@ -19,7 +20,7 @@ data class ArticleDetailBean(
 
 data class SearchHistoryBean(
     val username: String,
-    val articleId: Int
+    val searchString: String
 )
 
 data class CollectBean(
@@ -41,6 +42,7 @@ class DBHelper private constructor(context: Context) :
         private const val TABLE_COLLECT_NAME = "collect"
         // 列名
         private const val COLUMN_USERNAME = "username"
+        private const val COLUMN_SEARCH_STRING = "searchString"
         private const val COLUMN_ID = "id"
         private const val COLUMN_AUTHOR = "author"
         private const val COLUMN_FRESH = "fresh"
@@ -81,8 +83,8 @@ class DBHelper private constructor(context: Context) :
         val createSearchHistoryTableQuery = "CREATE TABLE $TABLE_SEARCH_NAME (" +
                 "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_USERNAME TEXT," +
-                "$COLUMN_ARTICLE_ID INTEGER," +
-                "UNIQUE ($COLUMN_USERNAME, $COLUMN_ARTICLE_ID)" +
+                "$COLUMN_SEARCH_STRING TEXT," +
+                "UNIQUE ($COLUMN_USERNAME, $COLUMN_SEARCH_STRING)" +
                 ")"
 
         val createCollectTableQuery = "CREATE TABLE $TABLE_COLLECT_NAME (" +
@@ -115,13 +117,13 @@ class DBHelper private constructor(context: Context) :
         return exists
     }
 
-    private fun isSearchHistoryExist(username: String, articleId: Int): Boolean {
+    private fun isSearchHistoryExist(username: String, searchString: String): Boolean {
         val db = readableDatabase
-        val selection = "$COLUMN_USERNAME = ? AND $COLUMN_ARTICLE_ID = ?"
-        val selectionArgs = arrayOf(username, articleId.toString())
+        val selection = "$COLUMN_USERNAME = ? AND $COLUMN_SEARCH_STRING = ?"
+        val selectionArgs = arrayOf(username, searchString)
         val cursor: Cursor = db.query(
             TABLE_SEARCH_NAME,  // 使用正确的表名常量
-            arrayOf(COLUMN_ID), // 此处只需要选择一个列，因为我们只关心记录是否存在
+            arrayOf(COLUMN_SEARCH_STRING), // 此处只需要选择一个列，因为我们只关心记录是否存在
             selection,
             selectionArgs,
             null,
@@ -179,14 +181,14 @@ class DBHelper private constructor(context: Context) :
     }
 
     fun insertSearchHistory(historyBean: SearchHistoryBean) {
-        if (isSearchHistoryExist(historyBean.username, historyBean.articleId)) {
+        if (isSearchHistoryExist(historyBean.username, historyBean.searchString)) {
             return
         }
 
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_USERNAME, historyBean.username)
-            put(COLUMN_ARTICLE_ID, historyBean.articleId)
+            put(COLUMN_SEARCH_STRING, historyBean.searchString)
         }
         db.insert(TABLE_SEARCH_NAME, null, values)
     }
@@ -274,9 +276,8 @@ class DBHelper private constructor(context: Context) :
 
         if (cursor.moveToFirst()) {
             do {
-                val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
-                val articleId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICLE_ID))
-                searchHistoryList.add(SearchHistoryBean(username, articleId))
+                val searchString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SEARCH_STRING))
+                searchHistoryList.add(SearchHistoryBean(username, searchString))
             } while (cursor.moveToNext())
         }
 
