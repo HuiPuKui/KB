@@ -17,6 +17,16 @@ data class ArticleDetailBean(
     var collect: Boolean
 )
 
+data class SearchHistoryBean(
+    val username: String,
+    val articleId: Int
+)
+
+data class CollectBean(
+    val username: String,
+    val articleId: Int
+)
+
 class DBHelper private constructor(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -27,8 +37,10 @@ class DBHelper private constructor(context: Context) :
         private const val DATABASE_NAME = "mydatabase.db"
         private const val DATABASE_VERSION = 1
         private const val TABLE_NAME = "articles"
-
+        private const val TABLE_SEARCH_NAME = "searchHistory"
+        private const val TABLE_COLLECT_NAME = "collect"
         // 列名
+        private const val COLUMN_USERNAME = "username"
         private const val COLUMN_ID = "id"
         private const val COLUMN_AUTHOR = "author"
         private const val COLUMN_FRESH = "fresh"
@@ -66,7 +78,25 @@ class DBHelper private constructor(context: Context) :
                 "$COLUMN_COLLECT INTEGER" +
                 ")"
 
+        val createSearchHistoryTableQuery = "CREATE TABLE $TABLE_SEARCH_NAME (" +
+                "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "$COLUMN_USERNAME TEXT," +
+                "$COLUMN_ARTICLE_ID INTEGER," +
+                "UNIQUE ($COLUMN_USERNAME, $COLUMN_ARTICLE_ID)" +
+                ")"
+
+        val createCollectTableQuery = "CREATE TABLE $TABLE_COLLECT_NAME (" +
+                "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "$COLUMN_USERNAME TEXT," +
+                "$COLUMN_ARTICLE_ID INTEGER," +
+                "UNIQUE ($COLUMN_USERNAME, $COLUMN_ARTICLE_ID)" +
+                ")"
+
         db.execSQL(createTableQuery)
+        db.execSQL(createSearchHistoryTableQuery)
+        db.execSQL(createCollectTableQuery)
+
+
     }
 
     private fun isArticleExist(articleId: Int): Boolean {
@@ -85,13 +115,49 @@ class DBHelper private constructor(context: Context) :
         return exists
     }
 
+    private fun isSearchHistoryExist(username: String, articleId: Int): Boolean {
+        val db = readableDatabase
+        val selection = "$COLUMN_USERNAME = ? AND $COLUMN_ARTICLE_ID = ?"
+        val selectionArgs = arrayOf(username, articleId.toString())
+        val cursor: Cursor = db.query(
+            TABLE_SEARCH_NAME,  // 使用正确的表名常量
+            arrayOf(COLUMN_ID), // 此处只需要选择一个列，因为我们只关心记录是否存在
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        val exists = cursor.moveToFirst()
+        cursor.close()
+        return exists
+    }
+
+    private fun isCollectExist(username: String, articleId: Int): Boolean {
+        val db = readableDatabase
+        val selection = "$COLUMN_USERNAME = ? AND $COLUMN_ARTICLE_ID = ?"
+        val selectionArgs = arrayOf(username, articleId.toString())
+        val cursor: Cursor = db.query(
+            TABLE_COLLECT_NAME,
+            arrayOf(COLUMN_ID),
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        val exists = cursor.moveToFirst()
+        cursor.close()
+        return exists
+    }
+
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
 
     fun insertArticle(article: ArticleDetailBean) {
-        // 先检查数据库中是否已经存在相同title的记录
         if (isArticleExist(article.articleId)) {
             return
         }
@@ -110,6 +176,32 @@ class DBHelper private constructor(context: Context) :
             put(COLUMN_COLLECT, if (article.collect) 1 else 0)
         }
         db.insert(TABLE_NAME, null, values)
+    }
+
+    fun insertSearchHistory(historyBean: SearchHistoryBean) {
+        if (isSearchHistoryExist(historyBean.username, historyBean.articleId)) {
+            return
+        }
+
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_USERNAME, historyBean.username)
+            put(COLUMN_ARTICLE_ID, historyBean.articleId)
+        }
+        db.insert(TABLE_SEARCH_NAME, null, values)
+    }
+
+    fun insertCollect(collectBean: CollectBean) {
+        if (isCollectExist(collectBean.username, collectBean.articleId)) {
+            return
+        }
+
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_USERNAME, collectBean.username)
+            put(COLUMN_ARTICLE_ID, collectBean.articleId)
+        }
+        db.insert(TABLE_COLLECT_NAME, null, values)
     }
 
     fun getAllArticles(): List<ArticleDetailBean> {
@@ -164,4 +256,59 @@ class DBHelper private constructor(context: Context) :
         return getAllArticles().filter { it.title.contains(searchTitle) }
     }
 
+    public fun getSearchHistoryForUser(username: String): List<SearchHistoryBean> {
+        val db = readableDatabase
+        val searchHistoryList = mutableListOf<SearchHistoryBean>()
+        val selection = "$COLUMN_USERNAME = ?"
+        val selectionArgs = arrayOf(username)
+
+        val cursor: Cursor = db.query(
+            TABLE_SEARCH_NAME,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
+                val articleId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICLE_ID))
+                searchHistoryList.add(SearchHistoryBean(username, articleId))
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        return searchHistoryList
+    }
+
+    public fun getCollectForUser(username: String): List<CollectBean> {
+        val db = readableDatabase
+        val CollectBeanList = mutableListOf<CollectBean>()
+        val selection = "$COLUMN_USERNAME = ?"
+        val selectionArgs = arrayOf(username)
+
+        val cursor: Cursor = db.query(
+            TABLE_COLLECT_NAME,
+            null, // 选择所有列
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
+                val articleId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTICLE_ID))
+                CollectBeanList.add(CollectBean(username, articleId))
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        return CollectBeanList
+    }
 }
