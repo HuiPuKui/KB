@@ -1,6 +1,7 @@
 package com.stew.kotlinbox
 
 import ArticleDetailBean
+import SearchHistoryBean
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.stew.kb_common.util.AppCommonUitl
 import com.stew.kb_common.util.Constants
+import com.stew.kb_common.util.KVUtil
 import com.stew.kb_home.adapter.HomeItemClickListener
 import com.stew.kb_home.viewmodel.HomeViewModel
 import okhttp3.internal.notifyAll
@@ -59,9 +61,25 @@ class SearchActivity : AppCompatActivity() {
 
         val tv_search: TextView = findViewById(R.id.tv_search)
         tv_search.setOnClickListener {
+
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(tv_search.windowToken, 0)
+            val editText_search: EditText = findViewById(R.id.editText_search)
+            Log.d("huipukui", editText_search.text.toString())
+
+            var searchString = editText_search.text.toString()
+            var username = ""
+
+            if (searchString.length > 0) {
+                if (KVUtil.getString(Constants.USER_NAME).isNullOrEmpty()) {
+                    username = "tourist"
+                } else {
+                    username = KVUtil.getString(Constants.USER_NAME).toString()
+                }
+                Log.d("huipukui", "username: ${username}")
+                DBHelper.getInstance(AppCommonUitl.appContext).insertSearchHistory(SearchHistoryBean(username, searchString))
+            }
             val dbHelper = DBHelper.getInstance(AppCommonUitl.appContext)
             list = dbHelper.searchArticlesByTitle(editText?.text.toString())
             searchRVAdapter.setData(list)
