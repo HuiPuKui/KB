@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
+import android.util.TypedValue
 import androidx.appcompat.app.AppCompatDelegate
 
 /**
@@ -96,5 +97,19 @@ object AppCommonUitl {
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
+
+    fun Context.pxToDp(px: Float): Float {
+        val density = resources.displayMetrics.density
+        return px / density
+    }
+
+    fun Context.dpToPx(dp: Float): Float {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            resources.displayMetrics
+        )
+    }
+
 
 }

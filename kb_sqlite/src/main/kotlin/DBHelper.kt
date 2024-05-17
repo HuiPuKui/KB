@@ -3,7 +3,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 
 data class ArticleDetailBean(
     val author: String,
@@ -83,7 +82,7 @@ class DBHelper private constructor(context: Context) :
         val createSearchHistoryTableQuery = "CREATE TABLE $TABLE_SEARCH_NAME (" +
                 "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_USERNAME TEXT," +
-                "$COLUMN_SEARCH_STRING TEXT," +
+                "$COLUMN_SEARCH_STRING TEXT UNIQUE," +
                 "UNIQUE ($COLUMN_USERNAME, $COLUMN_SEARCH_STRING)" +
                 ")"
 
@@ -258,7 +257,7 @@ class DBHelper private constructor(context: Context) :
         return getAllArticles().filter { it.title.contains(searchTitle) }
     }
 
-    public fun getSearchHistoryForUser(username: String): List<SearchHistoryBean> {
+    fun getSearchHistoryForUser(username: String): List<SearchHistoryBean> {
         val db = readableDatabase
         val searchHistoryList = mutableListOf<SearchHistoryBean>()
         val selection = "$COLUMN_USERNAME = ?"
@@ -283,6 +282,15 @@ class DBHelper private constructor(context: Context) :
 
         cursor.close()
         return searchHistoryList
+    }
+
+    fun deleteSearchHistoryBySearchString(searchString: String): Int {
+        val db = readableDatabase
+        val whereClause = "$COLUMN_SEARCH_STRING = ?"
+        val whereArgs = arrayOf(searchString)
+        val deletedRows = db.delete(TABLE_SEARCH_NAME, whereClause, whereArgs)
+        db.close()
+        return deletedRows
     }
 
     public fun getCollectForUser(username: String): List<CollectBean> {
