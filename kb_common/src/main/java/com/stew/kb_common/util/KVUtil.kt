@@ -32,7 +32,7 @@ object KVUtil {
 
     fun getLong(key: String, defValue: Long = 0L) = kv.getLong(key, defValue)
 
-    fun getString(key: String, defValue: String? = null) = kv.getString(key, defValue)
+    fun getString(key: String, defValue: String? = "tourist") = kv.getString(key, defValue)
 
     fun remove(key: String) = kv.remove(key)
 
